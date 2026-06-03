@@ -10,9 +10,8 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     async function checkAuth() {
       try {
-        const token = authService.getToken();
-        if (token) {
-          const currentUser = await authService.getMe();
+        const currentUser = await authService.getMe();
+        if (currentUser) {
           setUser(currentUser);
         }
       } catch (error) {
