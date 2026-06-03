@@ -1,11 +1,19 @@
 import React from 'react';
+import { useAuth } from '../contexts/AuthContext';
 
 export function Sidebar({ activeChat, setActiveChat }) {
+  const { user, logout } = useAuth();
+
   const contacts_mock = [
     { id: 1, name: 'Lara Santos', online: true, lastMsg: 'Tudo bem? Prefere Libras?' },
     { id: 2, name: 'Lucas Oliveira', online: true, lastMsg: 'A transcrição funcionou.' },
     { id: 3, name: 'Mariana Souza', online: false, lastMsg: 'Te vejo amanhã!' }
   ];
+
+  const getInitials = (name) => {
+    if (!name) return 'U';
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  };
 
   return (
     <aside className="w-80 h-full border-r border-slate-200 bg-white flex flex-col">
@@ -43,6 +51,34 @@ export function Sidebar({ activeChat, setActiveChat }) {
           </button>
         ))}
       </div>
+
+      {/* Logged in User Profile Footer */}
+      {user && (
+        <div className="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
+          <div className="flex items-center gap-3 min-w-0">
+            {/* Initials Avatar */}
+            <div className="w-9 h-9 rounded bg-slate-200 flex items-center justify-center font-semibold text-slate-700 text-sm flex-shrink-0">
+              {getInitials(user.name)}
+            </div>
+            <div className="min-w-0">
+              <h4 className="text-sm font-semibold text-slate-800 truncate">{user.name}</h4>
+              <p className="text-xs text-slate-500 truncate">{user.email}</p>
+            </div>
+          </div>
+          
+          {/* Logout Button */}
+          <button
+            onClick={logout}
+            title="Sair da conta"
+            className="p-1.5 text-slate-400 hover:text-slate-600 rounded transition-colors focus:outline-none cursor-pointer"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+          </button>
+        </div>
+      )}
     </aside>
   );
 }
+
